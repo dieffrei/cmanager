@@ -10,7 +10,7 @@ angular.module('br.com.cmanager.vehicle')
     }])
     .controller('VehicleListCtrl', ['$scope','VehicleService', function($scope, VehicleService) {
         
-        $scope.vehicles = VehicleService.getAllCars();
+        $scope.vehicles = [];
         $scope.isFormVisible = false;
         $scope.vehicle = null;
 
@@ -25,7 +25,7 @@ angular.module('br.com.cmanager.vehicle')
         };
 
         $scope.save = function(){
-            $scope.vehicles.push($scope.vehicle);
+            VehicleService.saveVehicle($scope.vehicle);
             closeForm();
         };
 
@@ -40,5 +40,21 @@ angular.module('br.com.cmanager.vehicle')
         function resetFields(){
             $scope.vehicle = new CManager.Vehicle();
         }
+        
+        function loadVehicles(){
+            VehicleService.getAllVehicles().then(function(result){
+                console.log('loadVehicles()', result);
+                $scope.vehicles = [];
+                _.each(result.data, function(v){
+                    $scope.vehicles.push(new CManager.Vehicle(v.Plate, v.Model, v.Year, v.Brand));
+                })
+            })
+        }
+        
+        function init(){
+            loadVehicles();
+        }
+
+        init();
         
     }]);
