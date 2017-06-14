@@ -10,12 +10,14 @@ angular.module('br.com.cmanager.vehicle')
     }])
     .controller('VehicleDetailCtrl', ['$scope','VehicleService', '$routeParams', function($scope, VehicleService, $routeParams) {
 
-        $scope.vehicle = CManager.Vehicle();
+        $scope.vehicle = new CManager.Vehicle();
 
         function load(){
-            VehicleService.getByPlate($routeParams.plate).then(function(v){
-                console.log(v);
-                $scope.vehicle = new CManager.Vehicle(v.Plate, v.Model, v.Year, v.Brand);
+            VehicleService.getByPlate($routeParams.plate)
+                .then(function(result){
+                    var v = result.data;
+                    console.log(v);
+                    $scope.vehicle = new CManager.Vehicle(v.Plate, v.Model, v.Year, v.Brand);
             })
         }
 
@@ -24,5 +26,4 @@ angular.module('br.com.cmanager.vehicle')
         }
 
         init();
-
     }]);
